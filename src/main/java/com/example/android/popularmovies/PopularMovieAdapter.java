@@ -58,9 +58,8 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
         }
     }
 
-    // Override onCreateViewHolder
-    // Within onCreateViewHolder, inflate the list item xml into a view
-    // Within onCreateViewHolder, return a new MovieViewHolder with the above view passed in as a parameter
+    // inflate the list item xml into a view
+    // return a new MovieViewHolder with the above view passed in as a parameter
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -72,7 +71,6 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
         return new MovieViewHolder(view);
-
 
     }
 
@@ -94,18 +92,11 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
 
         Picasso.with(context1).load(POPULARMOVIE_POSTER_BASE_URL + movie1.getImageUrl()).into(imageView1);
         Picasso.with(context2).load(POPULARMOVIE_POSTER_BASE_URL + movie2.getImageUrl()).into(imageView2);
-        //Picasso.with(context2).load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg ").into(imageView2);
-
 
     }
 
 
-    // Override getItemCount
     // Return 0 if mMovieData is null, or the size of mMovieData if it is not null
-
-    // Create a setPopularMovieData method that saves the popularMovieData to mMovieData
-    // After you save mMovieData, call notifyDataSetChanged
-    // Within ForecastAdapter.java /////////////////////////////////////////////////////////////////
 
     @Override
     public int getItemCount() {
@@ -115,11 +106,12 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
         return mMovieData.length / 2;
     }
 
-
-    public void setPopularMovieData(Movie[] popularMovieData) {
-        mMovieData = popularMovieData;
+    // saves the defaultMovieData to mMovieData
+    public void setDefaultMovieData(Movie[] defaultMovieData) {
+        mMovieData = defaultMovieData;
         notifyDataSetChanged();
     }
+
 
 
 }

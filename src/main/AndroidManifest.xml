@@ -22,7 +22,8 @@
         <activity
             android:label="@string/app_child"
             android:name=".DetailActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            >
 
         </activity>
     </application>

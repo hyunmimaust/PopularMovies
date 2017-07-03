@@ -42,6 +42,7 @@ public final class OpenPopularMoviesJsonUtils {
         final String MOVIE_TITLE = "title";
 
         final String MOVIE_POPULARITY = "popularity";
+        final String MOVIE_VOTE_AVERAGE = "vote_average";
         final String MOVIE_POSTER_PATH = "poster_path";
 
         final String MOVIE_OVERVUEW = "overview";
@@ -81,15 +82,6 @@ public final class OpenPopularMoviesJsonUtils {
 
         for (int i = 0; i < movieArray.length(); i++) {
 
-            /* These are the values that will be collected */
-            String title;
-            double popularity;
-            String poster_path;
-            String overview;
-            String original_language;
-            Boolean adult;
-            String release_date;
-
             /* Get the JSON object representing the movie */
             JSONObject movieObject = movieArray.getJSONObject(i);
 
@@ -97,17 +89,15 @@ public final class OpenPopularMoviesJsonUtils {
 
             Movie movie = new Movie();
 
-            // TODO Populate movie object
-
+            // Populate movie object
             movie.setTitle(movieObject.getString("title"));
-
+            movie.setVote_average(movieObject.getDouble("vote_average"));
             movie.setPopularity(movieObject.getDouble("popularity"));
             movie.setImageUrl(movieObject.getString("poster_path"));
             movie.setOverview(movieObject.getString("overview"));
             movie.setOriginal_language(movieObject.getString("original_language"));
             movie.setAdult(movieObject.getBoolean("adult"));
             movie.setRelease_date(movieObject.getString("release_date"));
-
 
             Log.i(OpenPopularMoviesJsonUtils.class.getName(), "Movie: " + movie.toString());
             parsedMovieData[i] = movie;

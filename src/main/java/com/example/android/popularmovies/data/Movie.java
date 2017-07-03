@@ -17,6 +17,7 @@ public class Movie implements Serializable {
     String overview;
     String release_date;
     Double popularity;
+    Double vote_average;
 
 
     public String getOriginal_language() {
@@ -25,6 +26,14 @@ public class Movie implements Serializable {
 
     public void setOriginal_language(String original_language) {
         this.original_language = original_language;
+    }
+
+    public Double getVote_average() {
+        return vote_average;
+    }
+
+    public void setVote_average(Double vote_average) {
+        this.vote_average = vote_average;
     }
 
     public Boolean getAdult() {
@@ -75,6 +84,14 @@ public class Movie implements Serializable {
         this.title = title;
     }
 
+    public String getRelease_year(){
+        String release_date = getRelease_date();
+        String year = null;
+        if(release_date.length() > 5){
+            year = release_date.substring(0, 4);
+        }
+        return year;
+    }
     @Override
     public String toString() {
         return "Movie{" +

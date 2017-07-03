@@ -8,15 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.data.Movie;
-import com.example.android.popularmovies.data.PopularMoviesPreference;
+import com.example.android.popularmovies.data.QueryType;
 import com.example.android.popularmovies.utilities.ImdbUtils;
 import com.example.android.popularmovies.utilities.OpenPopularMoviesJsonUtils;
 
@@ -28,34 +28,26 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
 
+    QueryType queryType = QueryType.DEFAULT_MOVIES;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-         * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
-         * do things like set the adapter of the RecyclerView and toggle the visibility.
-         */
+        // Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
+        // do things like set the adapter of the RecyclerView and toggle the visibility.
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_popularMovies);
 
-        /* This TextView is used to display errors and will be hidden if there are no errors */
+        // This TextView is used to display errors and will be hidden if there are no errors
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
-        /*
-         * LinearLayoutManager can support HORIZONTAL or VERTICAL orientations. The reverse layout
-         * parameter is useful mostly for HORIZONTAL layouts that should reverse for right to left
-         * languages.
-         */
+        // LinearLayoutManager can support VERTICAL orientations.
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        // COMPLETED (42) Use setHasFixedSize(true) on mRecyclerView to designate that all items in the list will have the same size
-        /*
-         * Use this setting to improve performance if you know that changes in content do not
-         * change the child layout size in the RecyclerView
-         */
+        // setHasFixedSize(true) on mRecyclerView to designate that all items in the list will have the same size
         mRecyclerView.setHasFixedSize(true);
 
         /*
@@ -65,32 +57,45 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         mAdapter = new PopularMovieAdapter(this);
 
         // Use mRecyclerView.setAdapter and pass in mAdapter
-        /* Setting the adapter attaches it to the RecyclerView in our layout. */
+        // Setting the adapter attaches it to the RecyclerView in our layout.
         mRecyclerView.setAdapter(mAdapter);
 
         /*
          * The ProgressBar that will indicate to the user that we are loading data. It will be
          * hidden when no data is loading.
-         *
-         * Please note: This so called "ProgressBar" isn't a bar by default. It is more of a
-         * circle. We didn't make the rules (or the names of Views), we just follow them.
          */
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        /* Once all of our views are setup, we can load the weather data. */
-        loadPopularMoviesData();
+        // Once all of our views are setup, we can load the movie data.
 
+        //loadDefaultMoviesData();
+
+        Intent mainIntent = getIntent();
+
+        if(mainIntent.hasExtra("queryType")){
+            queryType = (QueryType) mainIntent.getSerializableExtra("queryType");
+            Log.i(getClass().getName(), "Loading QueryType: " + queryType);
+        }
+        loadMovieData(queryType);
     }
 
-    /**
-     * This method will get the user's preferred location for weather, and then tell some
-     * background method to get the weather data in the background.
-     */
-    private void loadPopularMoviesData() {
-        showPopularMoviesDataView();
+    private void loadDefaultMoviesData() {
+        showMoviesDataView();
+        QueryType selectedJob = QueryType.DEFAULT_MOVIES;
+        Log.d(getClass().getName(),"loadDefaultMovesData()");
+        new FetchMovieDataTask().execute(selectedJob);
+    }
 
-        String location = PopularMoviesPreference.getPreferredWeatherLocation(this);
-        new FetchPopularMoviesTask().execute(location);
+    private void loadHighestRatedMoviesData() {
+        showMoviesDataView();
+        QueryType selectedJob = QueryType.HIGHESTRATED_MOVIES;
+        Log.d(getClass().getName(),"loadHightestRatedMovesData()");
+        new FetchMovieDataTask().execute(selectedJob);
+    }
+
+    private void loadMovieData(QueryType queryType){
+        showMoviesDataView();
+        new FetchMovieDataTask().execute(queryType);
     }
 
     @Override
@@ -101,41 +106,32 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         //pass the movie data to the DetalActivity
         intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, popularMovieData.toString());
         intentToStartDetailActivity.putExtra("movie", popularMovieData);
+        intentToStartDetailActivity.putExtra("queryType", queryType);
+
         startActivity(intentToStartDetailActivity);
 
     }
 
-    /**
-     * This method will make the View for the weather data visible and
+    /*
+     * This method will make the View for the mRecyclerView data visible and
      * hide the error message.
-     * <p>
-     * Since it is okay to redundantly set the visibility of a View, we don't
-     * need to check whether each view is currently visible or invisible.
      */
-    private void showPopularMoviesDataView() {
-        /* First, make sure the error is invisible */
+    private void showMoviesDataView() {
+        /* the error is invisible */
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        // COMPLETED (44) Show mRecyclerView, not mWeatherTextView
-        /* Then, make sure the weather data is visible */
+        // Show mRecyclerView and the weather data is visible
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * This method will make the error message visible and hide the weather
-     * View.
-     * <p>
-     * Since it is okay to redundantly set the visibility of a View, we don't
-     * need to check whether each view is currently visible or invisible.
-     */
     private void showErrorMessage() {
-        // COMPLETED (44) Hide mRecyclerView, not mWeatherTextView
-        /* First, hide the currently visible data */
+        // Hide mRecyclerView
+        // hide the currently visible data
         mRecyclerView.setVisibility(View.INVISIBLE);
-        /* Then, show the error */
+        // show the error
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    public class FetchPopularMoviesTask extends AsyncTask<String, Void, Movie[]> {
+    public class FetchMovieDataTask extends AsyncTask<QueryType, Void, Movie[]> {
 
         @Override
         protected void onPreExecute() {
@@ -144,36 +140,35 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         }
 
         @Override
-        protected Movie[] doInBackground(String... params) {
-
-            /* If there's no zip code, there's nothing to look up. */
+        protected Movie[] doInBackground(QueryType... params) {
+            /* If there's no jobs, there's nothing to look up. */
             if (params.length == 0) {
                 return null;
             }
 
-            //String location = params[0];
-            URL popularMoviesRequestUrl = ImdbUtils.buildUrl();
+            QueryType selectedJob = params[0];
+            URL moviesRequestUrl;
+            moviesRequestUrl = ImdbUtils.buildUrl(selectedJob);
             try {
-                String jsonPopularMoviesResponse = ImdbUtils.getMoviesFromHttpUrl(popularMoviesRequestUrl);
+                String jsonMoviesResponse = ImdbUtils.getMoviesFromHttpUrl(moviesRequestUrl);
+                Movie[] jsonMoviesData = OpenPopularMoviesJsonUtils
+                        .getPopularMoviesStringsFromJson(MainActivity.this, jsonMoviesResponse);
 
-                Movie[] jasonPopularMoviesData = OpenPopularMoviesJsonUtils
-                        .getPopularMoviesStringsFromJson(MainActivity.this, jsonPopularMoviesResponse);
-
-                return jasonPopularMoviesData;
-
+                return jsonMoviesData;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
+
         }
 
         @Override
         protected void onPostExecute(Movie[] popularMoviesData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (popularMoviesData != null) {
-                showPopularMoviesDataView();
-                // Instead of iterating through every string, use mAdapter.setWeatherData and pass in the weather data
-                mAdapter.setPopularMovieData(popularMoviesData);
+                showMoviesDataView();
+                // Instead of iterating through every string, use mAdapter.setDefaultMovieData and pass in the movie data
+                mAdapter.setDefaultMovieData(popularMoviesData);
             } else {
                 showErrorMessage();
             }
@@ -192,9 +187,13 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuItemThatwasSelected = item.getItemId();
         switch (menuItemThatwasSelected) {
-            case R.id.action_refresh: {
-                mAdapter.setPopularMovieData(null);
-                loadPopularMoviesData();
+            case R.id.highestRated_movie_list: {
+                mAdapter.setDefaultMovieData(null);
+                //loadHighestRatedMoviesData();
+
+                Intent mainActivityIntent = new Intent(this, MainActivity.class);
+                mainActivityIntent.putExtra("queryType", QueryType.HIGHESTRATED_MOVIES);
+                startActivity(mainActivityIntent);
 
                 return true;
             }
