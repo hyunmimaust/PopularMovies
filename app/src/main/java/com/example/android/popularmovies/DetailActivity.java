@@ -14,6 +14,9 @@ import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.QueryType;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.example.android.popularmovies.PopularMovieAdapter.POPULARMOVIE_POSTER_BASE_URL;
 
 /**
@@ -21,23 +24,31 @@ import static com.example.android.popularmovies.PopularMovieAdapter.POPULARMOVIE
  */
 
 public class DetailActivity extends AppCompatActivity {
-    private ImageView mImageDisplay;
-    private TextView mMovieInfoTitleDisplay;
-    private TextView mMovieInfoYearDisplay;
-    private TextView mMovieInfoVoteAverageDisplay;
-    private TextView mMovieInfoOverviewDisplay;
+
+    @BindView(R.id.iv_moviePosterSmall)
+    ImageView mImageDisplay;
+
+    @BindView(R.id.tv_title_display)
+    TextView mMovieInfoTitleDisplay;
+
+    @BindView(R.id.tv_movieInfo_year_display)
+    TextView mMovieInfoYearDisplay;
+    @BindView(R.id.tv_movieInfo_rate_display)
+    TextView mMovieInfoVoteAverageDisplay;
+
+    @BindView(R.id.tv_movieInfo_overview_display)
+    TextView mMovieInfoOverviewDisplay;
 
     private QueryType queryType;
+
     Movie movie;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        mMovieInfoTitleDisplay = (TextView) findViewById(R.id.tv_title_display);
-        mMovieInfoYearDisplay = (TextView) findViewById(R.id.tv_movieInfo_year_display);
-        mMovieInfoVoteAverageDisplay = (TextView) findViewById(R.id.tv_movieInfo_rate_display);
-        mMovieInfoOverviewDisplay = (TextView) findViewById(R.id.tv_movieInfo_overview_display);
+
+        ButterKnife.bind(this);
 
         Intent intentGetStartThisActivity = getIntent();
         movie = (Movie) intentGetStartThisActivity.getSerializableExtra("movie");
@@ -51,7 +62,6 @@ public class DetailActivity extends AppCompatActivity {
                 mMovieInfoOverviewDisplay.setText(movie.getOverview());
             }
 
-            mImageDisplay = (ImageView) findViewById(R.id.iv_moviePosterSmall);
             Context context = mImageDisplay.getContext();
             Picasso.with(context).load(POPULARMOVIE_POSTER_BASE_URL + movie.getImageUrl()).into(mImageDisplay);
         }

@@ -6,6 +6,5 @@ package com.example.android.popularmovies;
 
 public class Config {
 
-    // TODO Insert API Key Below
-    public static final String apiKey = "";
+    public static final String apiKey = BuildConfig.THEMOVIEDB_API_KEY;
 }

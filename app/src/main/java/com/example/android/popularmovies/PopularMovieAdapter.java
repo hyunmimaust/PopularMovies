@@ -26,33 +26,26 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
 
     public PopularMovieAdapter(PopularMovieAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
+
     }
     public class MovieViewHolder extends RecyclerView.ViewHolder {
-        public final ImageView mImageView1;
-        public final ImageView mImageView2;
+        public final ImageView mImageView;
 
         public MovieViewHolder(final View view) {
             super(view);
-            mImageView1 = (ImageView) view.findViewById(R.id.iv_moviePoster1);
-            mImageView2 = (ImageView) view.findViewById(R.id.iv_moviePoster2);
+            mImageView = (ImageView) view.findViewById(R.id.iv_moviePoster);
 
-            mImageView1.setOnClickListener(new View.OnClickListener() {
+            mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onMovieClick(view, 0);
                 }
             });
 
-            mImageView2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onMovieClick(view, 1);
-                }
-            });
         }
 
         public void onMovieClick(View v, int column) {
-            Movie selectedMovie = mMovieData[getAdapterPosition()*2 + column];
+            Movie selectedMovie = mMovieData[getAdapterPosition() + column];
             mClickHandler.onClick(selectedMovie);
 
         }
@@ -80,18 +73,13 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
 
-        Movie movie1 = mMovieData[position * 2];
-        Movie movie2 = mMovieData[position * 2 + 1];
+        Movie movie = mMovieData[position];
 
+        ImageView imageView = holder.mImageView;
 
-        ImageView imageView1 = holder.mImageView1;
-        ImageView imageView2 = holder.mImageView2;
+        Context context = imageView.getContext();
 
-        Context context1 = imageView1.getContext();
-        Context context2 = imageView2.getContext();
-
-        Picasso.with(context1).load(POPULARMOVIE_POSTER_BASE_URL + movie1.getImageUrl()).into(imageView1);
-        Picasso.with(context2).load(POPULARMOVIE_POSTER_BASE_URL + movie2.getImageUrl()).into(imageView2);
+        Picasso.with(context).load(POPULARMOVIE_POSTER_BASE_URL + movie.getImageUrl()).into(imageView);
 
     }
 
@@ -103,7 +91,7 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
         if (mMovieData == null) {
             return 0;
         }
-        return mMovieData.length / 2;
+        return mMovieData.length;
     }
 
     // saves the defaultMovieData to mMovieData
