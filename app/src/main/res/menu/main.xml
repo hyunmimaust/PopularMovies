@@ -6,5 +6,9 @@
         android:id="@+id/highestRated_movie_list"
         android:title="HightRated Movies"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/mostPopular_movie_list"
+        android:title="MostPopular Movies"
+        app:showAsAction="never" />
 
 </menu>

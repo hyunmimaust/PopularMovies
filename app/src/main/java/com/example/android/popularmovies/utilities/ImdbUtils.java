@@ -6,7 +6,6 @@ import android.util.Log;
 import com.example.android.popularmovies.Config;
 import com.example.android.popularmovies.data.QueryType;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -20,17 +19,18 @@ public class ImdbUtils {
     private static final String TAG = ImdbUtils.class.getSimpleName();
 
     private static String apiKey = Config.apiKey;
-    final static String POPULARMOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/popular?";
-    final static String HIGHTESTRATEDMOVIES_URL = "https://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc";
+    final static String MOSTPOPULARMOVIES_URL = "https://api.themoviedb.org/3/movie/popular?";
+    final static String HIGHTESTRATEDMOVIES_URL = "https://api.themoviedb.org/3/movie/top_rated?";
 
     private final static String API_KEY = "api_key";
     static String uri = null;
 
     public static URL buildUrl(QueryType selectedJob) {
         switch (selectedJob) {
-            case DEFAULT_MOVIES: {
-                uri = POPULARMOVIES_BASE_URL;
+            case MOSTPOPULAR_MOVIES: {
+                uri = MOSTPOPULARMOVIES_URL;
                 break;
+
             }
             case HIGHESTRATED_MOVIES: {
                 uri = HIGHTESTRATEDMOVIES_URL;

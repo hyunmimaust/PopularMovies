@@ -5,6 +5,6 @@ package com.example.android.popularmovies.data;
  */
 
 public enum QueryType {
-    DEFAULT_MOVIES,
+    MOSTPOPULAR_MOVIES,
     HIGHESTRATED_MOVIES
 }

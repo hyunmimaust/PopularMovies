@@ -12,9 +12,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField 'String', 'THEMOVIEDB_API_KEY', themoviedb_api_key
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'THEMOVIEDB_API_KEY', themoviedb_api_key
+
         }
     }
 }
@@ -29,6 +34,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // Add RecyclerView dependency
     compile 'com.android.support:recyclerview-v7:25.0.1'
-    //Add Picasso dependency
+    // Add Picasso dependency
     compile 'com.squareup.picasso:picasso:2.5.2'
+    //Add annotationProcessor syntax
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
 }

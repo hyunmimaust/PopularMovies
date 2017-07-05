@@ -6,4 +6,6 @@
     <color name="colorTitleText">#FAFAFA</color>
     <color name="colorTitleBackground">#009973</color>
     <color name="colorLine">#DADADA</color>
+    <color name="colorBackground">#000000</color>
+
 </resources>

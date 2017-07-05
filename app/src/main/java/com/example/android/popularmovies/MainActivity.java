@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
 
-    QueryType queryType = QueryType.DEFAULT_MOVIES;
+    QueryType queryType = QueryType.MOSTPOPULAR_MOVIES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +38,15 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         // Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
         // do things like set the adapter of the RecyclerView and toggle the visibility.
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_popularMovies);
+        int numberOfColumns = 2;
 
         // This TextView is used to display errors and will be hidden if there are no errors
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
-        // LinearLayoutManager can support VERTICAL orientations.
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
+        // GridLayoutManager will automatically increase tiles in the grid.
+        GridLayoutManager gridLayoutManager
+                = new GridLayoutManager(this, numberOfColumns);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
 
         // setHasFixedSize(true) on mRecyclerView to designate that all items in the list will have the same size
         mRecyclerView.setHasFixedSize(true);
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         // Once all of our views are setup, we can load the movie data.
-
         //loadDefaultMoviesData();
 
         Intent mainIntent = getIntent();
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
 
     private void loadDefaultMoviesData() {
         showMoviesDataView();
-        QueryType selectedJob = QueryType.DEFAULT_MOVIES;
+        QueryType selectedJob = QueryType.MOSTPOPULAR_MOVIES;
         Log.d(getClass().getName(),"loadDefaultMovesData()");
         new FetchMovieDataTask().execute(selectedJob);
     }
@@ -189,10 +189,18 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         switch (menuItemThatwasSelected) {
             case R.id.highestRated_movie_list: {
                 mAdapter.setDefaultMovieData(null);
-                //loadHighestRatedMoviesData();
 
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
                 mainActivityIntent.putExtra("queryType", QueryType.HIGHESTRATED_MOVIES);
+                startActivity(mainActivityIntent);
+
+                return true;
+            }
+            case R.id.mostPopular_movie_list: {
+                mAdapter.setDefaultMovieData(null);
+
+                Intent mainActivityIntent = new Intent(this, MainActivity.class);
+                mainActivityIntent.putExtra("queryType", QueryType.MOSTPOPULAR_MOVIES);
                 startActivity(mainActivityIntent);
 
                 return true;

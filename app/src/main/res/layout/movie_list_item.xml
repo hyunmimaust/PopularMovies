@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:stretchColumns="0,1">
+    android:layout_height="303dp"
+    >
 
-    <TableRow
-        android:id="@+id/iv_moviePoster"
-        android:layout_height="585dp">
 
         <ImageView
-            android:id="@+id/iv_moviePoster1"
-            android:layout_width="185dp"
-            android:layout_height="303dp"
-            android:scaleType="fitXY"/>
-        <ImageView
-            android:id="@+id/iv_moviePoster2"
-            android:layout_width="185dp"
-            android:layout_height="303dp"
-            android:scaleType="fitXY"/>
+            android:id="@+id/iv_moviePoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBackground"
+            />
 
-
-    </TableRow>
-</TableLayout>
+    </LinearLayout>
 
