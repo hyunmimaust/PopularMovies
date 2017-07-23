@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieListQueryType;
+import com.example.android.popularmovies.utilities.FetchMovieList;
 import com.example.android.popularmovies.utilities.ImdbUtils;
 import com.example.android.popularmovies.utilities.OpenPopularMoviesJsonUtils;
 
@@ -79,10 +80,6 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
             movieListQueryType = (MovieListQueryType) mainIntent.getSerializableExtra("movieListQueryType");
             Log.i(getClass().getName(), "Loading MovieListQueryType: " + movieListQueryType);
         }
-        if (mainIntent.hasExtra("id")){
-            movieId = (String) mainIntent.getSerializableExtra("id");
-            Log.i(getClass().getName(), "MovieID: " + movieId);
-        }
         loadMovieData(movieListQueryType);
     }
 
@@ -140,14 +137,9 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
             }
 
             MovieListQueryType selectedJob = params[0];
-            URL moviesRequestUrl;
-            moviesRequestUrl = ImdbUtils.buildUrl(selectedJob);
             try {
-                String jsonMoviesResponse = ImdbUtils.getMoviesFromHttpUrl(moviesRequestUrl);
-                Movie[] jsonMoviesData = OpenPopularMoviesJsonUtils
-                        .getPopularMoviesStringsFromJson(MainActivity.this, jsonMoviesResponse);
+                return FetchMovieList.fetch(selectedJob);
 
-                return jsonMoviesData;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

@@ -107,8 +107,8 @@ public class Movie implements Serializable {
     @Override
     public String toString() {
         return "Movie{" +
-                "imageUrl='" + imageUrl + '\'' +
-                ", title='" + title + '\'' +
+                "title='" + title + '\'' +
+                ", movieId='" + movieId + '\'' +
                 '}';
     }
 }

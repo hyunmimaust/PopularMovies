@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,11 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieListQueryType;
+import com.example.android.popularmovies.data.MovieReview;
+import com.example.android.popularmovies.utilities.FetchMovieReviewList;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +49,7 @@ public class DetailActivity extends AppCompatActivity {
     private MovieListQueryType movieListQueryType;
 
     Movie movie;
+    MovieReview mMovieReview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +75,7 @@ public class DetailActivity extends AppCompatActivity {
 
             String movieId = movie.getMovieId();
 
+            new FetchMovieReviewTask().execute(movieId);
 
         }
 
@@ -88,7 +95,6 @@ public class DetailActivity extends AppCompatActivity {
         int action = item.getItemId();
         switch (action) {
             case android.R.id.home: {
-                //onBackPressed();
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
                 mainActivityIntent.putExtra("movieListQueryType", movieListQueryType);
                 Log.i(getClass().getName(), "Launching MainActivity with MovieListQueryType " + movieListQueryType);
@@ -98,5 +104,33 @@ public class DetailActivity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    class FetchMovieReviewTask extends AsyncTask<String, Void, MovieReview[]>{
+        @Override
+        protected MovieReview[] doInBackground(String... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            String movieId = params[0];
+
+            try {
+                return FetchMovieReviewList.fetch(movieId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(MovieReview[] movieReviews) {
+            super.onPostExecute(movieReviews);
+            //MovieReview[] movieReview;
+            Log.i(getClass().getName(), "LoadMovieReviewString: " + movieReviews.toString());
+
+            //TODO display reviews
+        }
     }
 }
