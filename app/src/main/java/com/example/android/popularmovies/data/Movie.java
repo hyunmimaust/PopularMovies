@@ -3,6 +3,8 @@ package com.example.android.popularmovies.data;
 import java.io.Serializable;
 import java.util.Date;
 
+import static android.R.attr.id;
+
 /**
  * Created by hmaust on 6/28/17.
  */
@@ -18,6 +20,15 @@ public class Movie implements Serializable {
     String release_date;
     Double popularity;
     Double vote_average;
+    String movieId;
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String id) {
+        this.movieId = id;
+    }
 
 
     public String getOriginal_language() {
@@ -84,14 +95,15 @@ public class Movie implements Serializable {
         this.title = title;
     }
 
-    public String getRelease_year(){
+    public String getRelease_year() {
         String release_date = getRelease_date();
         String year = null;
-        if(release_date.length() > 5){
+        if (release_date.length() > 5) {
             year = release_date.substring(0, 4);
         }
         return year;
     }
+
     @Override
     public String toString() {
         return "Movie{" +

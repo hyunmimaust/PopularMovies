@@ -98,6 +98,7 @@ public final class OpenPopularMoviesJsonUtils {
             movie.setOriginal_language(movieObject.getString("original_language"));
             movie.setAdult(movieObject.getBoolean("adult"));
             movie.setRelease_date(movieObject.getString("release_date"));
+            movie.setMovieId(movieObject.getString("id"));
 
             Log.i(OpenPopularMoviesJsonUtils.class.getName(), "Movie: " + movie.toString());
             parsedMovieData[i] = movie;

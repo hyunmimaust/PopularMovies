@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.data.Movie;
-import com.example.android.popularmovies.data.QueryType;
+import com.example.android.popularmovies.data.MovieListQueryType;
 import com.example.android.popularmovies.utilities.ImdbUtils;
 import com.example.android.popularmovies.utilities.OpenPopularMoviesJsonUtils;
 
@@ -28,7 +28,9 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
 
-    QueryType queryType = QueryType.MOSTPOPULAR_MOVIES;
+    MovieListQueryType movieListQueryType = MovieListQueryType.MOSTPOPULAR_MOVIES;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int GRIDLAYOUT_COLUMN_NUMBER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         // Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
         // do things like set the adapter of the RecyclerView and toggle the visibility.
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_popularMovies);
-        int numberOfColumns = 2;
+        int numberOfColumns = GRIDLAYOUT_COLUMN_NUMBER;
+        String movieId;
 
         // This TextView is used to display errors and will be hidden if there are no errors
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
@@ -72,30 +75,20 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
 
         Intent mainIntent = getIntent();
 
-        if(mainIntent.hasExtra("queryType")){
-            queryType = (QueryType) mainIntent.getSerializableExtra("queryType");
-            Log.i(getClass().getName(), "Loading QueryType: " + queryType);
+        if (mainIntent.hasExtra("movieListQueryType")) {
+            movieListQueryType = (MovieListQueryType) mainIntent.getSerializableExtra("movieListQueryType");
+            Log.i(getClass().getName(), "Loading MovieListQueryType: " + movieListQueryType);
         }
-        loadMovieData(queryType);
+        if (mainIntent.hasExtra("id")){
+            movieId = (String) mainIntent.getSerializableExtra("id");
+            Log.i(getClass().getName(), "MovieID: " + movieId);
+        }
+        loadMovieData(movieListQueryType);
     }
 
-    private void loadDefaultMoviesData() {
+    private void loadMovieData(MovieListQueryType movieListQueryType) {
         showMoviesDataView();
-        QueryType selectedJob = QueryType.MOSTPOPULAR_MOVIES;
-        Log.d(getClass().getName(),"loadDefaultMovesData()");
-        new FetchMovieDataTask().execute(selectedJob);
-    }
-
-    private void loadHighestRatedMoviesData() {
-        showMoviesDataView();
-        QueryType selectedJob = QueryType.HIGHESTRATED_MOVIES;
-        Log.d(getClass().getName(),"loadHightestRatedMovesData()");
-        new FetchMovieDataTask().execute(selectedJob);
-    }
-
-    private void loadMovieData(QueryType queryType){
-        showMoviesDataView();
-        new FetchMovieDataTask().execute(queryType);
+        new FetchMovieDataTask().execute(movieListQueryType);
     }
 
     @Override
@@ -103,10 +96,10 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         Context context = this;
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        //pass the movie data to the DetalActivity
+        //pass the movie data to the DetailActivity
         intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, popularMovieData.toString());
         intentToStartDetailActivity.putExtra("movie", popularMovieData);
-        intentToStartDetailActivity.putExtra("queryType", queryType);
+        intentToStartDetailActivity.putExtra("movieListQueryType", movieListQueryType);
 
         startActivity(intentToStartDetailActivity);
 
@@ -131,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    public class FetchMovieDataTask extends AsyncTask<QueryType, Void, Movie[]> {
+    public class FetchMovieDataTask extends AsyncTask<MovieListQueryType, Void, Movie[]> {
 
         @Override
         protected void onPreExecute() {
@@ -140,13 +133,13 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         }
 
         @Override
-        protected Movie[] doInBackground(QueryType... params) {
+        protected Movie[] doInBackground(MovieListQueryType... params) {
             /* If there's no jobs, there's nothing to look up. */
             if (params.length == 0) {
                 return null;
             }
 
-            QueryType selectedJob = params[0];
+            MovieListQueryType selectedJob = params[0];
             URL moviesRequestUrl;
             moviesRequestUrl = ImdbUtils.buildUrl(selectedJob);
             try {
@@ -191,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
                 mAdapter.setDefaultMovieData(null);
 
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
-                mainActivityIntent.putExtra("queryType", QueryType.HIGHESTRATED_MOVIES);
+                mainActivityIntent.putExtra("movieListQueryType", MovieListQueryType.HIGHESTRATED_MOVIES);
                 startActivity(mainActivityIntent);
 
                 return true;
@@ -200,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
                 mAdapter.setDefaultMovieData(null);
 
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
-                mainActivityIntent.putExtra("queryType", QueryType.MOSTPOPULAR_MOVIES);
+                mainActivityIntent.putExtra("movieListQueryType", MovieListQueryType.MOSTPOPULAR_MOVIES);
                 startActivity(mainActivityIntent);
 
                 return true;

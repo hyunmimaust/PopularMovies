@@ -81,7 +81,6 @@
         </TableRow>
 
         <TableRow>
-
             <TextView
                 android:id="@+id/tv_movieInfo_overview_display"
                 android:layout_width="match_parent"
@@ -98,7 +97,6 @@
         </TableRow>
 
         <TableRow>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -108,6 +106,20 @@
                 android:background="@color/colorLine" />
         </TableRow>
 
+        <TableRow>
+            <TextView
+                android:id="@+id/tv_movieInfo_review_display"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@color/colorTitleText"
+                android:fontFamily="monospace"
+                android:paddingBottom="10sp"
+                android:paddingLeft="10sp"
+                android:paddingTop="10sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="12dp" />
+        </TableRow>
     </TableLayout>
 
 </ScrollView>
