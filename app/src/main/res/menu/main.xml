@@ -4,11 +4,11 @@
 
     <item
         android:id="@+id/highestRated_movie_list"
-        android:title="HightRated Movies"
+        android:title="Highest Rated Movies"
         app:showAsAction="never" />
     <item
         android:id="@+id/mostPopular_movie_list"
-        android:title="MostPopular Movies"
+        android:title="Most Popular Movies"
         app:showAsAction="never" />
 
 </menu>

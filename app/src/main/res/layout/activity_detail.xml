@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    >
 
     <TableLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -81,6 +83,7 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:id="@+id/tv_movieInfo_overview_display"
                 android:layout_width="match_parent"
@@ -97,29 +100,67 @@
         </TableRow>
 
         <TableRow>
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 android:layout_span="2"
-                android:background="@color/colorLine" />
+                android:background="@color/blackColorLine" />
         </TableRow>
 
         <TableRow>
-            <TextView
-                android:id="@+id/tv_movieInfo_review_display"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_movieTrailer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_span="2"
-                android:background="@color/colorTitleText"
-                android:fontFamily="monospace"
-                android:paddingBottom="10sp"
-                android:paddingLeft="10sp"
-                android:paddingTop="10sp"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="12dp" />
+                android:clipToPadding="false"
+                android:padding="8dp">
+
+            </android.support.v7.widget.RecyclerView>
         </TableRow>
+        <TableRow>
+            <!-- A progress bar that will be shown to users to indicate that Movie Review data is loading -->
+            <ProgressBar
+                android:id="@+id/pb_movieTrailer_loading_indicator"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:layout_span="2"
+                android:visibility="invisible" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_movieReview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:clipToPadding="false"
+                android:padding="8dp">
+
+            </android.support.v7.widget.RecyclerView>
+
+
+        </TableRow>
+
+        <TableRow>
+            <!-- A progress bar that will be shown to users to indicate that Movie Review data is loading -->
+            <ProgressBar
+                android:id="@+id/pb_movieReview_loading_indicator"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:layout_span="2"
+                android:visibility="invisible" />
+
+        </TableRow>
+
     </TableLayout>
+
 
 </ScrollView>

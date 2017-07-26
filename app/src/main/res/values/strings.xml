@@ -1,10 +1,8 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
-<string name="app_name">PopularMovies</string>
+    <string name="app_name">PopularMovies</string>
     <string name="app_child">MovieDetail</string>
     <string name="error_message">
-        An error has occurred. Please try again by clicking REFRESH
-    </string>
-<string name="POPULARMOVIE_POSTER_BASE_URL">http://image.tmdb.org/t/p/w185</string>
+        An error has occurred. Please try again by clicking REFRESH</string>
 
 </resources>

@@ -1,18 +1,16 @@
 package com.example.android.popularmovies.utilities;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.util.Log;
 
 import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieReview;
+import com.example.android.popularmovies.data.MovieTrailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-import java.util.Date;
 
 /**
  * Created by hmaust on 6/28/17.
@@ -28,39 +26,41 @@ public final class OpenPopularMoviesJsonUtils {
      * now, we just convert the JSON into human-readable strings.
      *
      * @param popularMoviesJsonStr JSON response from server
-     *
      * @return Array of Strings describing weather data
-     *
      * @throws JSONException If JSON data cannot be properly parsed
      */
+    private static final String MESSAGE_CODE = "cod";
+    private static final String RESULTS = "results";
+    /* All MOVIE are children of the "MOVIE[]" object */
+    private static final String MOVIE_TITLE = "title";
+    private static final String MOVIE_POPULARITY = "popularity";
+    private static final String MOVIE_VOTE_AVERAGE = "vote_average";
+    private static final String MOVIE_POSTER_PATH = "poster_path";
+    private static final String MOVIE_OVERVIEW = "overview";
+    private static final String MOVIE_ORIGINAL_LANGUAGE = "original_language";
+    private static final String MOVIE_ADULT = "adult";
+    private static final String MOVIE_RELEASE_DATE = "release_date";
+    private static final String MOVIE_ID = "id";
+
+    /* All movieTrailer are children of the "MovieTrailer[]" object */
+    private static final String TRAILER_KEY ="key";
+    private static final String TRAILER_NAME ="name";
+    private static final String TRAILER_SITE="site";
+    /* All movieReview are children of the "MovieReview[]" object */
+    private static final String REVIEW_AUTHOR ="author";
+    private static final String REVIEW_CONTENT ="content";
+    private static final String REVIEW_URL="url";
+
     public static Movie[] getPopularMoviesStringsFromJson(String popularMoviesJsonStr)
             throws JSONException {
-
-
-        final String MOVIES_RESULTS ="results";
-        /* All MOVIE are children of the "MOVIE[]" object */
-        final String MOVIE_TITLE = "title";
-
-        final String MOVIE_POPULARITY = "popularity";
-        final String MOVIE_VOTE_AVERAGE = "vote_average";
-        final String MOVIE_POSTER_PATH = "poster_path";
-
-        final String MOVIE_OVERVUEW = "overview";
-        final String MOVIE_ORIGINAL_LANGUAGE = "original_language";
-
-        final String MOVIE_ADULT = "adult";
-
-        final String MOVIE_RELEASE_DATE = "release_date";
-        final String MOVIE_MESSAGE_CODE = "cod";
-
         /* String array to hold each movie's info */
         Movie[] parsedMovieData = null;
 
         JSONObject popularMoviesJson = new JSONObject(popularMoviesJsonStr);
 
         /* Is there an error? */
-        if (popularMoviesJson.has(MOVIE_MESSAGE_CODE)) {
-            int errorCode = popularMoviesJson.getInt(MOVIE_MESSAGE_CODE);
+        if (popularMoviesJson.has(MESSAGE_CODE)) {
+            int errorCode = popularMoviesJson.getInt(MESSAGE_CODE);
 
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
@@ -74,8 +74,8 @@ public final class OpenPopularMoviesJsonUtils {
             }
         }
 
-        Log.d(OpenPopularMoviesJsonUtils.class.getName(), "JSON: " + popularMoviesJson.toString() );
-        JSONArray movieArray = popularMoviesJson.getJSONArray(MOVIES_RESULTS);
+        Log.d(OpenPopularMoviesJsonUtils.class.getName(), "JSON: " + popularMoviesJson.toString());
+        JSONArray movieArray = popularMoviesJson.getJSONArray(RESULTS);
 
         //Update size inside [] to proper size
         parsedMovieData = new Movie[movieArray.length()];
@@ -90,15 +90,15 @@ public final class OpenPopularMoviesJsonUtils {
             Movie movie = new Movie();
 
             // Populate movie object
-            movie.setTitle(movieObject.getString("title"));
-            movie.setVote_average(movieObject.getDouble("vote_average"));
-            movie.setPopularity(movieObject.getDouble("popularity"));
-            movie.setImageUrl(movieObject.getString("poster_path"));
-            movie.setOverview(movieObject.getString("overview"));
-            movie.setOriginal_language(movieObject.getString("original_language"));
-            movie.setAdult(movieObject.getBoolean("adult"));
-            movie.setRelease_date(movieObject.getString("release_date"));
-            movie.setMovieId(movieObject.getString("id"));
+            movie.setTitle(movieObject.getString(MOVIE_TITLE));
+            movie.setVote_average(movieObject.getDouble(MOVIE_VOTE_AVERAGE));
+            movie.setPopularity(movieObject.getDouble(MOVIE_POPULARITY));
+            movie.setImageUrl(movieObject.getString(MOVIE_POSTER_PATH));
+            movie.setOverview(movieObject.getString(MOVIE_OVERVIEW));
+            movie.setOriginal_language(movieObject.getString(MOVIE_ORIGINAL_LANGUAGE));
+            movie.setAdult(movieObject.getBoolean(MOVIE_ADULT));
+            movie.setRelease_date(movieObject.getString(MOVIE_RELEASE_DATE));
+            movie.setMovieId(movieObject.getString(MOVIE_ID));
 
             Log.i(OpenPopularMoviesJsonUtils.class.getName(), "Movie: " + movie.toString());
             parsedMovieData[i] = movie;
@@ -108,21 +108,68 @@ public final class OpenPopularMoviesJsonUtils {
         return parsedMovieData;
     }
 
-    public static MovieReview[] getMovieReviewStringsFromJson(String popularMoviesJsonStr)
-            throws JSONException {
-        /* Movie Review information. Each movie's info is an element of the "list" array */
-        final String MOVIES_REVIEW_RESULTS = "results";
+    public static MovieTrailer[] getMovieTrailerStringsFromJson(String movieTrailerStr)
+    throws JSONException{
+        /* String array to hold each movieTrailer's info */
+        MovieTrailer[] parsedMovieTrailerData = null;
 
-        final String MOVIE_MESSAGE_CODE = "cod";
-
-        /* String array to hold each movie's info */
-        MovieReview[] parsedMovieReviewData = null;
-
-        JSONObject movieReviewJson = new JSONObject(popularMoviesJsonStr);
+        JSONObject movieTrailerJson = new JSONObject(movieTrailerStr);
 
         /* Is there an error? */
-        if (movieReviewJson.has(MOVIE_MESSAGE_CODE)) {
-            int errorCode = movieReviewJson.getInt(MOVIE_MESSAGE_CODE);
+        if (movieTrailerJson.has(MESSAGE_CODE)) {
+            int errorCode = movieTrailerJson.getInt(MESSAGE_CODE);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* HTTP invalid */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+        Log.d(OpenPopularMoviesJsonUtils.class.getName(), "JSON: " + movieTrailerJson.toString());
+        JSONArray movieTrailerArray = movieTrailerJson.getJSONArray(RESULTS);
+
+        //Update size inside [] to proper size
+        parsedMovieTrailerData = new MovieTrailer[movieTrailerArray.length()];
+
+        for (int i = 0; i < movieTrailerArray.length(); i++) {
+
+            /* Get the JSON object representing the movie */
+            JSONObject movieTrailerObject = movieTrailerArray.getJSONObject(i);
+
+            Log.d(OpenPopularMoviesJsonUtils.class.getName(), "MovieReview JSON: " + movieTrailerObject.toString());
+
+            MovieTrailer movieTrailer = new MovieTrailer();
+
+            // Populate movieReview object
+            movieTrailer.setTrailerKey(movieTrailerObject.getString(TRAILER_KEY));
+            movieTrailer.setTrailerName(movieTrailerObject.getString(TRAILER_NAME));
+            movieTrailer.setTrailerSite(movieTrailerObject.getString(TRAILER_SITE));
+
+            Log.i(OpenPopularMoviesJsonUtils.class.getName(), "MovieTrailer: " + movieTrailer.toString());
+
+            parsedMovieTrailerData[i] = movieTrailer;
+
+        }
+
+        return parsedMovieTrailerData;
+
+    }
+
+    public static MovieReview[] getMovieReviewStringsFromJson(String movieReviewJsonStr)
+            throws JSONException {
+        /* String array to hold each movieReview's info */
+        MovieReview[] parsedMovieReviewData = null;
+
+        JSONObject movieReviewJson = new JSONObject(movieReviewJsonStr);
+
+        /* Is there an error? */
+        if (movieReviewJson.has(MESSAGE_CODE)) {
+            int errorCode = movieReviewJson.getInt(MESSAGE_CODE);
 
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
@@ -136,8 +183,8 @@ public final class OpenPopularMoviesJsonUtils {
             }
         }
 
-        Log.d(OpenPopularMoviesJsonUtils.class.getName(), "JSON: " + movieReviewJson.toString() );
-        JSONArray movieReviewArray = movieReviewJson.getJSONArray(MOVIES_REVIEW_RESULTS);
+        Log.d(OpenPopularMoviesJsonUtils.class.getName(), "JSON: " + movieReviewJson.toString());
+        JSONArray movieReviewArray = movieReviewJson.getJSONArray(RESULTS);
 
         //Update size inside [] to proper size
         parsedMovieReviewData = new MovieReview[movieReviewArray.length()];
@@ -152,9 +199,9 @@ public final class OpenPopularMoviesJsonUtils {
             MovieReview movieReview = new MovieReview();
 
             // Populate movieReview object
-            movieReview.setAuthor(movieReviewObject.getString("author"));
-            movieReview.setContent(movieReviewObject.getString("content"));
-            movieReview.setUrl(movieReviewObject.getString("url"));
+            movieReview.setAuthor(movieReviewObject.getString(REVIEW_AUTHOR));
+            movieReview.setContent(movieReviewObject.getString(REVIEW_CONTENT));
+            movieReview.setUrl(movieReviewObject.getString(REVIEW_URL));
 
             Log.i(OpenPopularMoviesJsonUtils.class.getName(), "MovieReview: " + movieReview.toString());
 
