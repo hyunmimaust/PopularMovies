@@ -63,4 +63,10 @@ public class MovieTrailer implements Serializable {
         this.trailerType = trailerType;
     }
 
+    public String toString() {
+        return "name: " + trailerName + '\n' +
+                "site: " + trailerSite + '\n' +
+                "key'" + trailerKey + '\n';
     }
+
+}

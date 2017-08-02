@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,13 +18,16 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieListQueryType;
+import com.example.android.popularmovies.data.MyFavoriteContract;
+import com.example.android.popularmovies.data.MyFavoriteDAO;
 import com.example.android.popularmovies.utilities.FetchMovieList;
-import com.example.android.popularmovies.utilities.ImdbUtils;
-import com.example.android.popularmovies.utilities.OpenPopularMoviesJsonUtils;
+
+import org.json.JSONException;
 
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements PopularMovieAdapter.PopularMovieAdapterOnClickHandler {
+    MyFavoriteDAO mMyfavoriteDAO;
     private PopularMovieAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private TextView mErrorMessageDisplay;
@@ -38,11 +42,12 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mMyfavoriteDAO = new MyFavoriteDAO(this);
+
         // Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
         // do things like set the adapter of the RecyclerView and toggle the visibility.
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_popularMovies);
         int numberOfColumns = GRIDLAYOUT_COLUMN_NUMBER;
-        String movieId;
 
         // This TextView is used to display errors and will be hidden if there are no errors
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
 
         // setHasFixedSize(true) on mRecyclerView to designate that all items in the list will have the same size
         mRecyclerView.setHasFixedSize(true);
+
 
         /*
          * The PopularMovieAdapter is responsible for linking our popularMovie data with the Views that
@@ -137,14 +143,47 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
             }
 
             MovieListQueryType selectedJob = params[0];
-            try {
-                return FetchMovieList.fetch(selectedJob);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+            switch (selectedJob) {
+                case HIGHESTRATED_MOVIES:
+                case MOSTPOPULAR_MOVIES: {
+                    try {
+                        return FetchMovieList.fetch(selectedJob);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+                case MYFAVORITE_MOVIES:
+                    // Get all myFavorite movies info from the database and save in a cursor
+                    Cursor cursor;
+                    Log.i(getClass().getName(), ""+mMyfavoriteDAO);
+                    cursor = mMyfavoriteDAO.getAllMyFavorite();
+                    // Create set Movie object from the cursor
+                    Movie[] myFavorite = getMovieObjectFromCursor(cursor, cursor.getCount());
+                    return myFavorite;
             }
+            return null;
+        }
 
+        public Movie[] getMovieObjectFromCursor(Cursor cursor, int numberOfMovies) {
+            /* String array to hold myfavorite movie collection */
+            Movie[] myFavoriteMovieData = new Movie[numberOfMovies];
+
+            if (numberOfMovies == 0)
+                return null;
+
+            for (int i=0; i<numberOfMovies; i++) {
+                cursor.moveToNext();
+                Movie myFavorite = new Movie();
+                myFavorite.setMovieId(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_ID)));
+                myFavorite.setTitle(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_NAME)));
+                myFavorite.setReleaseDate(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_YEAR)));
+                myFavorite.setVoteAverage(cursor.getDouble(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_RATE)));
+                myFavorite.setImageUrl(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_IMAGEURL)));
+                myFavorite.setOverview(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_DESCRIPTION)));
+                myFavoriteMovieData[i] = myFavorite;
+            }
+            return myFavoriteMovieData;
         }
 
         @Override
@@ -158,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
                 showErrorMessage();
             }
         }
+
     }
 
     // Use getMenuInflater()te to inflate the menu
@@ -173,21 +213,21 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         int menuItemThatwasSelected = item.getItemId();
         switch (menuItemThatwasSelected) {
             case R.id.highestRated_movie_list: {
-                mAdapter.setDefaultMovieData(null);
-
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
                 mainActivityIntent.putExtra("movieListQueryType", MovieListQueryType.HIGHESTRATED_MOVIES);
                 startActivity(mainActivityIntent);
-
                 return true;
             }
             case R.id.mostPopular_movie_list: {
-                mAdapter.setDefaultMovieData(null);
-
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
                 mainActivityIntent.putExtra("movieListQueryType", MovieListQueryType.MOSTPOPULAR_MOVIES);
                 startActivity(mainActivityIntent);
-
+                return true;
+            }
+            case R.id.myFavoritesCollection: {
+                Intent mainActivityIntent = new Intent(this, MainActivity.class);
+                mainActivityIntent.putExtra("movieListQueryType", MovieListQueryType.MYFAVORITE_MOVIES);
+                startActivity(mainActivityIntent);
                 return true;
             }
         }

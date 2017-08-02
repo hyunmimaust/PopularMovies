@@ -1,9 +1,11 @@
 package com.example.android.popularmovies.utilities;
 
+import android.content.Context;
 import android.provider.ContactsContract;
 
 import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieListQueryType;
+import com.example.android.popularmovies.data.MyFavoriteDAO;
 
 import org.json.JSONException;
 
@@ -20,4 +22,11 @@ public class FetchMovieList {
         String jsonString = ImdbUtils.getMoviesFromHttpUrl(url);
         return OpenPopularMoviesJsonUtils.getPopularMoviesStringsFromJson(jsonString);
     }
+
+
+
+
+
+
+
 }

@@ -19,6 +19,7 @@ import java.util.Scanner;
 public class ImdbUtils {
     private static final String TAG = ImdbUtils.class.getSimpleName();
     private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
+    private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     private static String apiKey = Config.apiKey;
     private final static String API_KEY = "api_key";
 
@@ -32,8 +33,13 @@ public class ImdbUtils {
         return uriString;
     }
 
-    public static String uriForMoviewTrailerList(String movieId) {
+    public static String uriForMovieTrailerList(String movieId) {
         String uriString = BASE_URL + "" + movieId + "/videos";
+        return uriString;
+    }
+
+    public static String uriForYouTubeMovieTrailer(String trailerKey) {
+        String uriString = YOUTUBE_URL + trailerKey;
         return uriString;
     }
 

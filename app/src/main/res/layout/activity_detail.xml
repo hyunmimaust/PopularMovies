@@ -3,15 +3,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fillViewport="true"
-    >
+    android:fillViewport="true">
 
     <TableLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:stretchColumns="0,1"
-
         tools:context="com.example.android.popularmovies.DetailActivity">
 
         <TableRow>
@@ -47,6 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+
                     <TextView
                         android:id="@+id/tv_movieInfo_year_display"
                         android:layout_width="match_parent"
@@ -54,6 +53,10 @@
                         android:fontFamily="monospace"
                         android:padding="10sp"
                         android:textSize="14dp" />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent" />
 
                 </TableRow>
 
@@ -68,15 +71,40 @@
                         android:fontFamily="monospace"
                         android:padding="10sp"
                         android:textSize="14dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/markAsFavorite_to_myFavorite_button"
+                        android:layout_width="30dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorTitleBackground"
+                        android:textColor="@color/colorTitleText"
+                        android:fontFamily="monospace"
+                        android:onClick="onClickMarkAsFavoriteButton"
+                        android:padding="10sp"
+                        android:text="Mark As Favorite"
+                        android:textSize="12dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+
             </TableLayout>
 
 
@@ -111,16 +139,29 @@
         </TableRow>
 
         <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:fontFamily="monospace"
+                android:padding="10dp"
+                android:text="Trailers:"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18dp" />
+        </TableRow>
+
+        <TableRow>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_movieTrailer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="2"
-                android:clipToPadding="false"
-                android:padding="8dp">
+                android:layout_span="2">
 
             </android.support.v7.widget.RecyclerView>
         </TableRow>
+
         <TableRow>
             <!-- A progress bar that will be shown to users to indicate that Movie Review data is loading -->
             <ProgressBar
@@ -135,15 +176,35 @@
 
         <TableRow>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_span="2"
+                android:background="@color/blackColorLine" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:fontFamily="monospace"
+                android:padding="10dp"
+                android:text="Reviews:"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18dp" />
+        </TableRow>
+
+        <TableRow>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_movieReview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="2"
-                android:clipToPadding="false"
-                android:padding="8dp">
-
-            </android.support.v7.widget.RecyclerView>
+                android:layout_span="2"></android.support.v7.widget.RecyclerView>
 
 
         </TableRow>

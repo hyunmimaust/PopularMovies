@@ -10,5 +10,8 @@
         android:id="@+id/mostPopular_movie_list"
         android:title="Most Popular Movies"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/myFavoritesCollection"
+        android:title="My Favorites Collection"
+        app:showAsAction="never" />
 </menu>

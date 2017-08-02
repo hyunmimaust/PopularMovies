@@ -17,6 +17,11 @@ import com.example.android.popularmovies.data.MovieReview;
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewAdapterViewHolder> {
     private MovieReview[] mMovieReviewData;
 
+    @Override
+    public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
+        super.registerAdapterDataObserver(observer);
+    }
+
     public MovieReviewAdapter() {
 
     }

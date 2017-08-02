@@ -3,6 +3,9 @@
     <string name="app_name">PopularMovies</string>
     <string name="app_child">MovieDetail</string>
     <string name="error_message">
-        An error has occurred. Please try again by clicking REFRESH</string>
+        An error has occurred. Please try again.</string>
+    <string name="error_messgae_myfavorite">
+        A error has occured in My Favorite Colletion. Please try again.
+    </string>
 
 </resources>

@@ -91,13 +91,13 @@ public final class OpenPopularMoviesJsonUtils {
 
             // Populate movie object
             movie.setTitle(movieObject.getString(MOVIE_TITLE));
-            movie.setVote_average(movieObject.getDouble(MOVIE_VOTE_AVERAGE));
+            movie.setVoteAverage(movieObject.getDouble(MOVIE_VOTE_AVERAGE));
             movie.setPopularity(movieObject.getDouble(MOVIE_POPULARITY));
             movie.setImageUrl(movieObject.getString(MOVIE_POSTER_PATH));
             movie.setOverview(movieObject.getString(MOVIE_OVERVIEW));
-            movie.setOriginal_language(movieObject.getString(MOVIE_ORIGINAL_LANGUAGE));
+            movie.setOriginalLanguage(movieObject.getString(MOVIE_ORIGINAL_LANGUAGE));
             movie.setAdult(movieObject.getBoolean(MOVIE_ADULT));
-            movie.setRelease_date(movieObject.getString(MOVIE_RELEASE_DATE));
+            movie.setReleaseDate(movieObject.getString(MOVIE_RELEASE_DATE));
             movie.setMovieId(movieObject.getString(MOVIE_ID));
 
             Log.i(OpenPopularMoviesJsonUtils.class.getName(), "Movie: " + movie.toString());

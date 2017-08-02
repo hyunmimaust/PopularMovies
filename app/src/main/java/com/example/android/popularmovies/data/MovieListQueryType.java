@@ -6,8 +6,8 @@ package com.example.android.popularmovies.data;
 
 public enum MovieListQueryType {
     MOSTPOPULAR_MOVIES("https://api.themoviedb.org/3/movie/popular?"),
-    HIGHESTRATED_MOVIES("https://api.themoviedb.org/3/movie/top_rated?");
-
+    HIGHESTRATED_MOVIES("https://api.themoviedb.org/3/movie/top_rated?"),
+    MYFAVORITE_MOVIES("https://api.themoviedb.org/3/movie/");
 
     String baseUrl;
 

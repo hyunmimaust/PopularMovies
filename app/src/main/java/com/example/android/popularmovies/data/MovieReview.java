@@ -42,8 +42,7 @@ public class MovieReview implements Serializable {
 
     public String toString() {
         return "author: " + review_author + '\n' +
-                "content: "+ review_content+'\n'+
-                "url'" + review_url + '\n';
+                "content: "+ review_content+'\n';
     }
 
 

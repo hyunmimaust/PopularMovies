@@ -1,9 +1,8 @@
 package com.example.android.popularmovies.data;
 
-import java.io.Serializable;
-import java.util.Date;
+import android.database.Cursor;
 
-import static android.R.attr.id;
+import java.io.Serializable;
 
 /**
  * Created by hmaust on 6/28/17.
@@ -13,13 +12,13 @@ public class Movie implements Serializable {
 
     String imageUrl;
     String title;
-    String original_language;
+    String originalLanguage;
 
     Boolean adult;
     String overview;
-    String release_date;
+    String releaseDate;
     Double popularity;
-    Double vote_average;
+    Double voteAverage;
     String movieId;
 
     public String getMovieId() {
@@ -31,20 +30,20 @@ public class Movie implements Serializable {
     }
 
 
-    public String getOriginal_language() {
-        return original_language;
+    public String getOriginalLanguage() {
+        return originalLanguage;
     }
 
-    public void setOriginal_language(String original_language) {
-        this.original_language = original_language;
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
     }
 
-    public Double getVote_average() {
-        return vote_average;
+    public Double getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVote_average(Double vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public Boolean getAdult() {
@@ -63,12 +62,12 @@ public class Movie implements Serializable {
         this.overview = overview;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public Double getPopularity() {
@@ -96,7 +95,7 @@ public class Movie implements Serializable {
     }
 
     public String getRelease_year() {
-        String release_date = getRelease_date();
+        String release_date = getReleaseDate();
         String year = null;
         if (release_date.length() > 5) {
             year = release_date.substring(0, 4);
@@ -111,4 +110,6 @@ public class Movie implements Serializable {
                 ", movieId='" + movieId + '\'' +
                 '}';
     }
+
+
 }
