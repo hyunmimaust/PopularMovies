@@ -54,10 +54,10 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
         @Override
         public void onClick(View view) {
             Log.i(getClass().getName(), "MOVIE TRAILER: " + view.toString());
-            String youTubeTrailerKey = "MKyp9Tx-NPY";
+
+            String youTubeTrailerKey = mMovieTrailerData[getAdapterPosition()].getTrailerKey();
             mClickHandler.onClick(youTubeTrailerKey);
         }
-
     }
 
     @Override

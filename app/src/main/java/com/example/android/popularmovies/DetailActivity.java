@@ -159,7 +159,7 @@ public class DetailActivity extends AppCompatActivity implements
                 Intent mainActivityIntent = new Intent(this, MainActivity.class);
                 mainActivityIntent.putExtra("movieListQueryType", MovieListQueryType.MYFAVORITE_MOVIES);
                 startActivity(mainActivityIntent);
-            return true;
+                return true;
             }
 
         }
@@ -247,8 +247,19 @@ public class DetailActivity extends AppCompatActivity implements
 
     public void onClickMarkAsFavoriteButton(View view) {
         if (!getExistedMovieId()) {
-            mMyfavoriteDAO.addMyfavorite(movie);
+            long addMyfavoriteFunction = mMyfavoriteDAO.addMyfavorite(movie);
+            if (addMyfavoriteFunction > 0) {
+                Log.i(getClass().getName(), "Toast Called: " + addMyfavoriteFunction);
+                Toast.makeText(getApplicationContext(), "Marked As Favorite", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "It is not Marked As Favorite.", Toast.LENGTH_SHORT).show();
+            }
         }
+        else{
+            Toast.makeText(getApplicationContext(), "It is already Marked As Favorite", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private boolean getExistedMovieId() {
@@ -256,7 +267,6 @@ public class DetailActivity extends AppCompatActivity implements
         return mMyfavoriteDAO.isFavorite(movieId);
 
     }
-
 
 
     @Override

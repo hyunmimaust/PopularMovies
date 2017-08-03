@@ -22,11 +22,4 @@ public class FetchMovieList {
         String jsonString = ImdbUtils.getMoviesFromHttpUrl(url);
         return OpenPopularMoviesJsonUtils.getPopularMoviesStringsFromJson(jsonString);
     }
-
-
-
-
-
-
-
 }
