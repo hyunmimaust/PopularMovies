@@ -24,8 +24,7 @@ import com.example.android.popularmovies.data.MovieListQueryType;
 import com.example.android.popularmovies.data.MovieReview;
 import com.example.android.popularmovies.data.MovieTrailer;
 import com.example.android.popularmovies.data.MyFavoriteDAO;
-import com.example.android.popularmovies.utilities.FetchMovieReviewList;
-import com.example.android.popularmovies.utilities.FetchMovieTrailerList;
+import com.example.android.popularmovies.utilities.FetchDataJson;
 import com.example.android.popularmovies.utilities.ImdbUtils;
 import com.squareup.picasso.Picasso;
 
@@ -183,7 +182,7 @@ public class DetailActivity extends AppCompatActivity implements
             String movieId = params[0];
 
             try {
-                return FetchMovieTrailerList.fetch(movieId);
+                return FetchDataJson.fetchTrailerList(movieId);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return null;
@@ -219,7 +218,7 @@ public class DetailActivity extends AppCompatActivity implements
             String movieId = params[0];
 
             try {
-                return FetchMovieReviewList.fetch(movieId);
+                return FetchDataJson.fetchReviewList(movieId);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return null;

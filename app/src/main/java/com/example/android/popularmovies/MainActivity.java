@@ -20,7 +20,7 @@ import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieListQueryType;
 import com.example.android.popularmovies.data.MyFavoriteContract;
 import com.example.android.popularmovies.data.MyFavoriteDAO;
-import com.example.android.popularmovies.utilities.FetchMovieList;
+import com.example.android.popularmovies.utilities.FetchDataJson;
 
 import org.json.JSONException;
 
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
                 case HIGHESTRATED_MOVIES:
                 case MOSTPOPULAR_MOVIES: {
                     try {
-                        return FetchMovieList.fetch(selectedJob);
+                        return FetchDataJson.fetchMovieList(selectedJob);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         return null;
