@@ -25,6 +25,7 @@ import static com.example.android.popularmovies.R.id.movieTrailer;
  */
 
 public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapter.MovieTrailerAdapterViewHolder> {
+
     private MovieTrailer[] mMovieTrailerData;
     private final MovieTrailerAdapterOnClickHandler mClickHandler;
 
@@ -75,7 +76,7 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     @Override
     public void onBindViewHolder(MovieTrailerAdapterViewHolder holder, int position) {
         MovieTrailer movieTrailer = mMovieTrailerData[position];
-        Log.i(getClass().getName(), "Displaying " + movieTrailer.getTrailerName());
+        //Log.i(getClass().getName(), "Displaying " + movieTrailer.getTrailerName());
         holder.iconView.setImageResource(R.drawable.video_play_icon);
         holder.mMovieTrailerTextView.setText(movieTrailer.getTrailerName());
     }
@@ -95,6 +96,9 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     }
 
 
+    public MovieTrailer[] getmMovieTrailerData() {
+        return mMovieTrailerData;
+    }
 
 
 }

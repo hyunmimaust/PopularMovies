@@ -41,7 +41,11 @@ import static com.example.android.popularmovies.PopularMovieAdapter.POPULARMOVIE
 
 public class DetailActivity extends AppCompatActivity implements
         MovieTrailerAdapter.MovieTrailerAdapterOnClickHandler {
+
     MyFavoriteDAO mMyfavoriteDAO;
+    private TextView mTrailerErrorMessageDisplay;
+    private TextView mReviewErrorMessageDisplay;
+
     //Reference to RecyclerViews and Adapters for Movie Review List and Trailer List
     private MovieReviewAdapter mMovieReviewAdapter;
     private MovieTrailerAdapter mMovieTrailerAdapter;
@@ -65,6 +69,9 @@ public class DetailActivity extends AppCompatActivity implements
     TextView mMovieInfoOverviewDisplay;
 
     private MovieListQueryType movieListQueryType;
+    private static final String LIFECYCLE_TRAILER_TEXT_KEY = "trailers";
+    private static final String LIFECYCLE_REVIEW_TEXT_KEY = "reviews";
+    private static final String TAG = DetailActivity.class.getSimpleName();
 
     Movie movie;
 
@@ -73,6 +80,11 @@ public class DetailActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        boolean trailerDataLoaded = false;
+        boolean reviewDataLoaded = false;
+        // This TextView is used to display errors and will be hidden if there are no errors
+        mTrailerErrorMessageDisplay = (TextView) findViewById(R.id.tv_trailer_error_message_display);
+        mReviewErrorMessageDisplay = (TextView) findViewById(R.id.tv_review_error_message_display);
 
         mMovieTrailerList = (RecyclerView) findViewById(R.id.rv_movieTrailer);
         mMovieReviewList = (RecyclerView) findViewById(R.id.rv_movieReview);
@@ -99,6 +111,23 @@ public class DetailActivity extends AppCompatActivity implements
 
         ButterKnife.bind(this);
 
+        if (savedInstanceState != null) {
+            Log.d(TAG, "savedInstance in DetailActivity is not null ");
+
+            if (savedInstanceState.containsKey(LIFECYCLE_TRAILER_TEXT_KEY)) {
+                //restore movieDataList from mAdapter
+                mMovieTrailerAdapter.setmMovieTrailerData((MovieTrailer[]) savedInstanceState.getSerializable(LIFECYCLE_TRAILER_TEXT_KEY));
+                trailerDataLoaded = true;
+                Log.d(TAG, "savedInstance is loaded from mMovieTrailerAdapter: " + trailerDataLoaded);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_REVIEW_TEXT_KEY)) {
+                //restore movieDataList from mAdapter
+                mMovieReviewAdapter.setmMovieReviewData((MovieReview[]) savedInstanceState.getSerializable(LIFECYCLE_REVIEW_TEXT_KEY));
+                reviewDataLoaded = true;
+                Log.d(TAG, "savedInstance is loaded from mMovieReviewAdapter: " + reviewDataLoaded);
+            }
+        }
+
         Intent intentGetStartThisActivity = getIntent();
         movie = (Movie) intentGetStartThisActivity.getSerializableExtra("movie");
         movieListQueryType = (MovieListQueryType) intentGetStartThisActivity.getSerializableExtra("movieListQueryType");
@@ -117,10 +146,41 @@ public class DetailActivity extends AppCompatActivity implements
 
             String movieId = movie.getMovieId();
 
-            new FetchMovieReviewTask().execute(movieId);
-            new FetchMovieTrailerTask().execute(movieId);
+            if (!trailerDataLoaded)
+                loadTrailerData(movieId);
+
+            if (!reviewDataLoaded)
+                loadReviewData(movieId);
+
             mMyfavoriteDAO = new MyFavoriteDAO(this);
         }
+    }
+
+    private void loadTrailerData(String movieId) {
+        showTrailerDataView();
+
+        new FetchMovieTrailerTask().execute(movieId);
+    }
+
+    private void loadReviewData(String movieId) {
+        showReviewDataView();
+        new FetchMovieReviewTask().execute(movieId);
+
+    }
+
+    private void showTrailerDataView() {
+       /* the error is invisible */
+        mTrailerErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        // Show mRecyclerView and the weather data is visible
+        mMovieTrailerList.setVisibility(View.VISIBLE);
+
+    }
+
+    private void showReviewDataView() {
+       /* the error is invisible */
+        mReviewErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        // Show mRecyclerView and the weather data is visible
+        mMovieReviewList.setVisibility(View.VISIBLE);
     }
 
     // Menu items for fetching trailers and reviews of the selected movie
@@ -163,6 +223,22 @@ public class DetailActivity extends AppCompatActivity implements
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mMovieTrailerAdapter.getmMovieTrailerData() != null) {
+            outState.putSerializable(LIFECYCLE_TRAILER_TEXT_KEY, mMovieTrailerAdapter.getmMovieTrailerData());
+        }
+        if (mMovieReviewAdapter.getmMovieReviewData() != null) {
+            outState.putSerializable(LIFECYCLE_REVIEW_TEXT_KEY, mMovieReviewAdapter.getmMovieReviewData());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     class FetchMovieTrailerTask extends AsyncTask<String, Void, MovieTrailer[]> {
@@ -236,11 +312,11 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
-    private void showMovieTrailerDataView() {
+    public void showMovieTrailerDataView() {
         mMovieTrailerList.setVisibility(View.VISIBLE);
     }
 
-    private void showMovieReviewDataView() {
+    public void showMovieReviewDataView() {
         mMovieReviewList.setVisibility(View.VISIBLE);
     }
 
@@ -250,12 +326,10 @@ public class DetailActivity extends AppCompatActivity implements
             if (addMyfavoriteFunction > 0) {
                 Log.i(getClass().getName(), "Toast Called: " + addMyfavoriteFunction);
                 Toast.makeText(getApplicationContext(), "Marked As Favorite", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Toast.makeText(getApplicationContext(), "It is not Marked As Favorite.", Toast.LENGTH_SHORT).show();
             }
-        }
-        else{
+        } else {
             Toast.makeText(getApplicationContext(), "It is already Marked As Favorite", Toast.LENGTH_SHORT).show();
         }
 

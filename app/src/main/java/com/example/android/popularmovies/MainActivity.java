@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
     private ProgressBar mLoadingIndicator;
 
     MovieListQueryType movieListQueryType = MovieListQueryType.MOSTPOPULAR_MOVIES;
+    private static final String LIFECYCLE_MOVIE_TEXT_KEY = "movies";
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GRIDLAYOUT_COLUMN_NUMBER = 2;
 
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        boolean movieDataLoaded = false;
 
         mMyfavoriteDAO = new MyFavoriteDAO(this);
 
@@ -77,16 +81,29 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
          */
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
+        if (savedInstanceState != null) {
+            Log.d(TAG, "savedInstance is not null ");
+
+            if(savedInstanceState.containsKey(LIFECYCLE_MOVIE_TEXT_KEY)){
+                //restore movieDataList from mAdapter
+                mAdapter.setDefaultMovieData((Movie[])  savedInstanceState.getSerializable(LIFECYCLE_MOVIE_TEXT_KEY));
+                movieDataLoaded = true;
+                Log.d(TAG, "savedInstance is loaded from mAdapter: " + movieDataLoaded);
+
+            }
+        }
+
         // Once all of our views are setup, we can load the movie data.
         //loadDefaultMoviesData();
-
         Intent mainIntent = getIntent();
 
         if (mainIntent.hasExtra("movieListQueryType")) {
             movieListQueryType = (MovieListQueryType) mainIntent.getSerializableExtra("movieListQueryType");
-            Log.i(getClass().getName(), "Loading MovieListQueryType: " + movieListQueryType);
+            Log.i(TAG, "Loading MovieListQueryType: " + movieListQueryType);
         }
-        loadMovieData(movieListQueryType);
+
+        if(!movieDataLoaded)
+            loadMovieData(movieListQueryType);
     }
 
     private void loadMovieData(MovieListQueryType movieListQueryType) {
@@ -127,6 +144,19 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mAdapter.getMovieData() != null){
+            outState.putSerializable(LIFECYCLE_MOVIE_TEXT_KEY, mAdapter.getMovieData());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
     public class FetchMovieDataTask extends AsyncTask<MovieListQueryType, Void, Movie[]> {
 
         @Override
@@ -156,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
                 case MYFAVORITE_MOVIES:
                     // Get all myFavorite movies info from the database and save in a cursor
                     Cursor cursor;
-                    Log.i(getClass().getName(), ""+mMyfavoriteDAO);
+                    Log.i(getClass().getName(), "" + mMyfavoriteDAO);
                     cursor = mMyfavoriteDAO.getAllMyFavorite();
                     // Create set Movie object from the cursor
                     Movie[] myFavorite = getMovieObjectFromCursor(cursor, cursor.getCount());
@@ -172,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
             if (numberOfMovies == 0)
                 return null;
 
-            for (int i=0; i<numberOfMovies; i++) {
+            for (int i = 0; i < numberOfMovies; i++) {
                 cursor.moveToNext();
                 Movie myFavorite = new Movie();
                 myFavorite.setMovieId(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_ID)));

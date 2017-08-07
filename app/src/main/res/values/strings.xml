@@ -3,9 +3,13 @@
     <string name="app_name">PopularMovies</string>
     <string name="app_child">MovieDetail</string>
     <string name="error_message">
-        An error has occurred. Please try again.</string>
+        An error has occurred in fetching the movies. Please try again.</string>
+    <string name="trailer_error_message">
+        An error has occurred in fetching the trailers. Please try again.</string>
+    <string name="review_error_message">
+        An error has occurred in fetching the reviews. Please try again.</string>
     <string name="error_messgae_myfavorite">
-        A error has occured in My Favorite Colletion. Please try again.
+        A error has occured in fetching the My Favorite Colletion. Please try again.
     </string>
 
 </resources>

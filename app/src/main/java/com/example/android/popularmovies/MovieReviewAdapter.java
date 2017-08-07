@@ -15,6 +15,7 @@ import com.example.android.popularmovies.data.MovieReview;
  */
 
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewAdapterViewHolder> {
+
     private MovieReview[] mMovieReviewData;
 
     @Override
@@ -41,7 +42,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.review_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately =false;
+        boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
 
@@ -51,7 +52,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     @Override
     public void onBindViewHolder(MovieReviewAdapterViewHolder holder, int position) {
         MovieReview movieReview = mMovieReviewData[position];
-        Log.i(getClass().getName(), "Displaying " + movieReview.toString());
+        //Log.i(getClass().getName(), "Displaying " + movieReview.toString());
         holder.mMovieReviewTextView.setText(movieReview.toString());
 
     }
@@ -68,6 +69,10 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
         mMovieReviewData = movieReviewData;
         notifyDataSetChanged();
 
+    }
+
+    public MovieReview[] getmMovieReviewData() {
+        return mMovieReviewData;
     }
 
 }

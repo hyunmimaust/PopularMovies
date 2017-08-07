@@ -1,5 +1,8 @@
 package com.example.android.popularmovies.utilities;
 
+import android.util.Log;
+
+import com.example.android.popularmovies.MainActivity;
 import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieListQueryType;
 import com.example.android.popularmovies.data.MovieReview;
@@ -14,11 +17,14 @@ import java.net.URL;
  */
 
 public class FetchDataJson {
+    private static final String TAG = FetchDataJson.class.getSimpleName();
+
     //For movie list
     public static Movie[] fetchMovieList(MovieListQueryType movieListQueryType) throws JSONException {
         String uriString = ImdbUtils.uriForSelectedJob(movieListQueryType);
         URL url = ImdbUtils.buildUrl(uriString);
         String jsonString = ImdbUtils.getMoviesFromHttpUrl(url);
+        Log.i(TAG, "Movie[] fetched: " + url.toString());
         return OpenPopularMoviesJsonUtils.getPopularMoviesStringsFromJson(jsonString);
     }
 
@@ -27,6 +33,7 @@ public class FetchDataJson {
         String uriString = ImdbUtils.uriForMovieReviewList(movieId);
         URL url = ImdbUtils.buildUrl(uriString);
         String jsonString = ImdbUtils.getMoviesFromHttpUrl(url);
+        Log.i(TAG, "MovieReview[] fetched: " + url.toString());
         return OpenPopularMoviesJsonUtils.getMovieReviewStringsFromJson(jsonString);
     }
 
@@ -35,6 +42,7 @@ public class FetchDataJson {
         String uriString = ImdbUtils.uriForMovieTrailerList(movieId);
         URL url = ImdbUtils.buildUrl(uriString);
         String jsonString = ImdbUtils.getMoviesFromHttpUrl(url);
+        Log.i(TAG, "MovieTrailer[] fetched: " + url.toString());
         return OpenPopularMoviesJsonUtils.getMovieTrailerStringsFromJson(jsonString);
     }
 

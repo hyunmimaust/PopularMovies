@@ -161,6 +161,18 @@
 
             </android.support.v7.widget.RecyclerView>
         </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/tv_trailer_error_message_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:padding="16dp"
+                android:text="@string/error_message"
+                android:textSize="20sp"
+                android:visibility="invisible" />
+        </TableRow>
+
 
         <TableRow>
             <!-- A progress bar that will be shown to users to indicate that Movie Review data is loading -->
@@ -199,14 +211,24 @@
         </TableRow>
 
         <TableRow>
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_movieReview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_span="2"></android.support.v7.widget.RecyclerView>
 
+        </TableRow>
 
+        <TableRow>
+            <TextView
+                android:id="@+id/tv_review_error_message_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:padding="16dp"
+                android:text="@string/error_message"
+                android:textSize="20sp"
+                android:visibility="invisible" />
         </TableRow>
 
         <TableRow>

@@ -101,5 +101,7 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
     }
 
 
-
+    public Movie[] getMovieData() {
+        return mMovieData;
+    }
 }
