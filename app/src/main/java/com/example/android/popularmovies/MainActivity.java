@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
         if (savedInstanceState != null) {
             Log.d(TAG, "savedInstance is not null ");
 
-            if(savedInstanceState.containsKey(LIFECYCLE_MOVIE_TEXT_KEY)){
+            if (savedInstanceState.containsKey(LIFECYCLE_MOVIE_TEXT_KEY)) {
                 //restore movieDataList from mAdapter
-                mAdapter.setDefaultMovieData((Movie[])  savedInstanceState.getSerializable(LIFECYCLE_MOVIE_TEXT_KEY));
+                mAdapter.setDefaultMovieData((Movie[]) savedInstanceState.getSerializable(LIFECYCLE_MOVIE_TEXT_KEY));
                 movieDataLoaded = true;
                 Log.d(TAG, "savedInstance is loaded from mAdapter: " + movieDataLoaded);
 
@@ -102,27 +102,13 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
             Log.i(TAG, "Loading MovieListQueryType: " + movieListQueryType);
         }
 
-        if(!movieDataLoaded)
+        if (!movieDataLoaded)
             loadMovieData(movieListQueryType);
     }
 
     private void loadMovieData(MovieListQueryType movieListQueryType) {
         showMoviesDataView();
         new FetchMovieDataTask().execute(movieListQueryType);
-    }
-
-    @Override
-    public void onClick(Movie popularMovieData) {
-        Context context = this;
-        Class destinationClass = DetailActivity.class;
-        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        //pass the movie data to the DetailActivity
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, popularMovieData.toString());
-        intentToStartDetailActivity.putExtra("movie", popularMovieData);
-        intentToStartDetailActivity.putExtra("movieListQueryType", movieListQueryType);
-
-        startActivity(intentToStartDetailActivity);
-
     }
 
     /*
@@ -145,9 +131,23 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
     }
 
     @Override
+    public void onClick(Movie popularMovieData) {
+        Context context = this;
+        Class destinationClass = DetailActivity.class;
+        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+        //pass the movie data to the DetailActivity
+        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, popularMovieData.toString());
+        intentToStartDetailActivity.putExtra("movie", popularMovieData);
+        intentToStartDetailActivity.putExtra("movieListQueryType", movieListQueryType);
+
+        startActivity(intentToStartDetailActivity);
+
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(mAdapter.getMovieData() != null){
+        if (mAdapter.getMovieData() != null) {
             outState.putSerializable(LIFECYCLE_MOVIE_TEXT_KEY, mAdapter.getMovieData());
         }
     }
@@ -189,32 +189,12 @@ public class MainActivity extends AppCompatActivity implements PopularMovieAdapt
                     Log.i(getClass().getName(), "" + mMyfavoriteDAO);
                     cursor = mMyfavoriteDAO.getAllMyFavorite();
                     // Create set Movie object from the cursor
-                    Movie[] myFavorite = getMovieObjectFromCursor(cursor, cursor.getCount());
+                    Movie[] myFavorite = mMyfavoriteDAO.getMovieObjectFromCursor(cursor, cursor.getCount());
                     return myFavorite;
             }
             return null;
         }
 
-        public Movie[] getMovieObjectFromCursor(Cursor cursor, int numberOfMovies) {
-            /* String array to hold myfavorite movie collection */
-            Movie[] myFavoriteMovieData = new Movie[numberOfMovies];
-
-            if (numberOfMovies == 0)
-                return null;
-
-            for (int i = 0; i < numberOfMovies; i++) {
-                cursor.moveToNext();
-                Movie myFavorite = new Movie();
-                myFavorite.setMovieId(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_ID)));
-                myFavorite.setTitle(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_NAME)));
-                myFavorite.setReleaseDate(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_YEAR)));
-                myFavorite.setVoteAverage(cursor.getDouble(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_RATE)));
-                myFavorite.setImageUrl(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_IMAGEURL)));
-                myFavorite.setOverview(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_DESCRIPTION)));
-                myFavoriteMovieData[i] = myFavorite;
-            }
-            return myFavoriteMovieData;
-        }
 
         @Override
         protected void onPostExecute(Movie[] popularMoviesData) {

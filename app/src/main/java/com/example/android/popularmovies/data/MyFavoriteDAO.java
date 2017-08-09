@@ -69,5 +69,25 @@ public class MyFavoriteDAO {
 
     }
 
+    public Movie[] getMovieObjectFromCursor(Cursor cursor, int numberOfMovies) {
+            /* String array to hold myfavorite movie collection */
+        Movie[] myFavoriteMovieData = new Movie[numberOfMovies];
+
+        if (numberOfMovies == 0)
+            return null;
+
+        for (int i = 0; i < numberOfMovies; i++) {
+            cursor.moveToNext();
+            Movie myFavorite = new Movie();
+            myFavorite.setMovieId(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_ID)));
+            myFavorite.setTitle(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_NAME)));
+            myFavorite.setReleaseDate(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_YEAR)));
+            myFavorite.setVoteAverage(cursor.getDouble(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_RATE)));
+            myFavorite.setImageUrl(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_IMAGEURL)));
+            myFavorite.setOverview(cursor.getString(cursor.getColumnIndex(MyFavoriteContract.MyFavoriteEntry.COLUMN_DESCRIPTION)));
+            myFavoriteMovieData[i] = myFavorite;
+        }
+        return myFavoriteMovieData;
+    }
 
 }
