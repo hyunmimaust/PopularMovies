@@ -4,7 +4,6 @@
     <!-- This permission is necessary in order for Sunshine to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,8 +14,7 @@
 
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -24,8 +22,13 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/app_child"
-            android:parentActivityName=".MainActivity">
-        </activity>
+            android:parentActivityName=".MainActivity"></activity>
+
+        <!-- exported = false limits access to this ContentProvider to only this app -->
+        <provider
+            android:name="com.example.android.popularmovies.data.MyFavoriteContentProvider"
+            android:authorities="com.example.android.popularmovies"
+            android:exported="false" />
 
     </application>
 

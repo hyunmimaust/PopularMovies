@@ -322,9 +322,9 @@ public class DetailActivity extends AppCompatActivity implements
 
     public void onClickMarkAsFavoriteButton(View view) {
         if (!getExistedMovieId()) {
-            long addMyfavoriteFunction = mMyfavoriteDAO.addMyfavorite(movie);
-            if (addMyfavoriteFunction > 0) {
-                Log.i(getClass().getName(), "Toast Called: " + addMyfavoriteFunction);
+            Uri addMyFavorite = mMyfavoriteDAO.addMyFavorite(movie);
+            if (addMyFavorite !=null) {
+                Log.i(getClass().getName(), "Toast Called: " + addMyFavorite);
                 Toast.makeText(getApplicationContext(), "Marked As Favorite", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "It is not Marked As Favorite.", Toast.LENGTH_SHORT).show();

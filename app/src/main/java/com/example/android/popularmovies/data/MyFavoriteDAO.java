@@ -4,32 +4,58 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.example.android.popularmovies.DetailActivity;
 
 /**
  * Created by hmaust on 8/2/17.
  */
 
 public class MyFavoriteDAO {
-    private SQLiteDatabase mDb;
+
+    private static final String TAG = MyFavoriteDAO.class.getSimpleName();
+
+    Context context;
+
     public MyFavoriteDAO(Context context) {
-        MyFavoriteDbHelper dbHelper = new MyFavoriteDbHelper(context);
-        mDb = dbHelper.getWritableDatabase();
+        this.context = context;
     }
 
-    public boolean isFavorite(String movieId){
-        String query = "select count(*) from " + MyFavoriteContract.MyFavoriteEntry.TABLE_NAME +
-                " WHERE " + MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_ID + " = ?";
+    public boolean isFavorite(String movieId) {
 
         String[] args = new String[]{movieId};
+        try {
+            Cursor cursor = context.getContentResolver().query(MyFavoriteContract.MyFavoriteEntry.CONTENT_URI,
+                    null,
+                    MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_ID + "=?",
+                    args,
+                    null);
+            cursor.moveToFirst();
+            Log.d(getClass().getName(), "Cursor.getInt: " + cursor.getInt(0));
+            return cursor.getInt(0)>0;
+        } catch (Exception e){
+            return false;
+        }
 
-        Cursor cursor = mDb.rawQuery(query, args);
-        cursor.moveToFirst();
-        Log.d(getClass().getName(), "Cursor.getInt: " + cursor.getInt(0));
-        return cursor.getInt(0) > 0;
+}
+
+    public Cursor getAllMyFavorite() {
+        try {
+            return context.getContentResolver().query(MyFavoriteContract.MyFavoriteEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    MyFavoriteContract.MyFavoriteEntry._ID);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to get all my favorite collection.");
+            return null;
+        }
     }
 
-    public long addMyfavorite(Movie movie) {
+    public Uri addMyFavorite(Movie movie) {
         ContentValues cv = new ContentValues();
 
         cv.put(MyFavoriteContract.MyFavoriteEntry.COLUMN_MOVIE_ID, movie.getMovieId());
@@ -38,19 +64,10 @@ public class MyFavoriteDAO {
         cv.put(MyFavoriteContract.MyFavoriteEntry.COLUMN_RATE, movie.getVoteAverage());
         cv.put(MyFavoriteContract.MyFavoriteEntry.COLUMN_IMAGEURL, movie.getImageUrl());
         cv.put(MyFavoriteContract.MyFavoriteEntry.COLUMN_DESCRIPTION, movie.getOverview());
-        return mDb.insert(MyFavoriteContract.MyFavoriteEntry.TABLE_NAME, null, cv);
+        Uri uri = context.getContentResolver().insert(MyFavoriteContract.MyFavoriteEntry.CONTENT_URI, cv);
+        return uri;
 
     }
 
-    public Cursor getAllMyFavorite() {
-        return mDb.query(
-                MyFavoriteContract.MyFavoriteEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                MyFavoriteContract.MyFavoriteEntry._ID);
-    }
 
 }
